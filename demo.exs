@@ -5,7 +5,7 @@ Mix.install([
   {:nimble_parsec, "~> 1.4"}
 ])
 
-Code.require_file("lib/livebook_parser.ex")
+Code.require_file("lib/nimble_livebook_markdown_extractor.ex")
 
 # Read the sample file
 content = File.read!("sample.md.livemd")

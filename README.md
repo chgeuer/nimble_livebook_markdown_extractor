@@ -1,8 +1,5 @@
 # NimbleLivebookMarkdownExtractor
 
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen)]()
-[![Elixir](https://img.shields.io/badge/elixir-~%3E%201.19-blueviolet)]()
-
 A robust NimbleParsec-based parser for extracting executable Elixir code from LiveBook markdown files.
 
 ## Overview
@@ -11,27 +8,22 @@ LiveBook notebooks (`.livemd` files) are markdown documents that contain executa
 
 ### Key Features
 
-- **🎯 Precise Parsing** - Uses NimbleParsec combinators for robust, declarative parsing
-- **🔍 Smart Filtering** - Automatically excludes code blocks marked with `<!-- livebook:{"force_markdown":true} -->`
-- **📦 Multiple APIs** - Three extraction modes to fit different use cases
-- **✅ Thoroughly Tested** - 14 tests covering edge cases and real-world scenarios
-- **🔄 Drop-in Compatible** - API-compatible with regex-based parsers
+- **Precise Parsing** - Uses NimbleParsec combinators for robust, declarative parsing
+- **Smart Filtering** - Automatically excludes code blocks marked with `<!-- livebook:{"force_markdown":true} -->`
 
 ## Installation
-
-Add `nimble_parsec` to your dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:nimble_parsec, "~> 1.4"}
+    {:nimble_livebook_markdown_extractor, github: "chgeuer/nimble_livebook_markdown_extractor" }
   ]
 end
 ```
 
-Then copy `lib/nimble_livebook_markdown_extractor.ex` to your project.
-
 ## Usage
+
+See [QUICK_START.md](QUICK_START.md) for common patterns and recipes.
 
 ### Quick Start
 
@@ -254,35 +246,11 @@ Built with NimbleParsec combinators:
 
 ### Edge Cases Handled
 
-- ✅ Blank lines within code cells (preserved)
-- ✅ Multiple consecutive code blocks
-- ✅ Multiple force_markdown markers
-- ✅ Empty code cells
-- ✅ Code blocks with no content
-- ✅ Documents with no code blocks
-- ✅ Nested or malformed markdown
+- Blank lines within code cells (preserved)
+- Multiple consecutive code blocks
+- Multiple force_markdown markers
+- Empty code cells
+- Code blocks with no content
+- Documents with no code blocks
+- Nested or malformed markdown
 
-## Comparison with Regex-Based Parsers
-
-See [COMPARISON.md](COMPARISON.md) for a detailed comparison with the original regex-based implementation.
-
-**Summary:** This parser provides 100% compatible functionality while offering:
-- More robust parsing
-- Better error handling
-- Additional extraction modes
-- Cleaner, declarative code
-
-## License
-
-Same as the parent project.
-
-## Contributing
-
-1. Ensure tests pass: `mix test`
-2. Add tests for new features
-3. Update documentation
-4. Follow existing code style
-
----
-
-**Note:** This is a standalone module that can be integrated into any Elixir project. No external dependencies except `nimble_parsec`.
