@@ -1,0 +1,31 @@
+# Untitled notebook
+
+```elixir
+Mix.install([
+  {:req, "~> 0.5.16"}
+])
+```
+
+## Section
+
+```elixir
+# This is a real code cell
+
+a = 5
+```
+
+```elixir
+Req.get!(url: "https://www.microsoft.com/")
+```
+
+This is markdown and here's an Elixir sample code that appears in the markdown and must NOT be executed:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+b = 3
+```
+
+```elixir
+c = "This is a real code cell"
+```
