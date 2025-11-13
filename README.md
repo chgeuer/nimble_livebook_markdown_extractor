@@ -6,10 +6,15 @@ A robust NimbleParsec-based parser for extracting executable Elixir code from Li
 
 LiveBook notebooks (`.livemd` files) are markdown documents that contain executable Elixir code cells. This library provides a reliable way to extract these code cells while intelligently filtering out markdown examples that are marked as non-executable.
 
+**Perfect for LLM Coding Agents:** When working with AI coding assistants like GitHub Copilot, Claude Code, or Cursor, this module provides a scriptable way to extract and test Elixir code from LiveBooks. AI agents can use this to validate notebooks, debug iteratively, and automate testing workflows. See [AI_AGENT_GUIDE.md](AI_AGENT_GUIDE.md) for detailed examples.
+
 ### Key Features
 
 - **Precise Parsing** - Uses NimbleParsec combinators for robust, declarative parsing
 - **Smart Filtering** - Automatically excludes code blocks marked with `<!-- livebook:{"force_markdown":true} -->`
+- **Multiple APIs** - Three extraction modes to fit different use cases
+- **Thoroughly Tested** - 14 tests covering edge cases and real-world scenarios
+- **AI-Agent Ready** - Scriptable extraction for automated testing and validation
 
 ## Installation
 
@@ -34,6 +39,22 @@ content = File.read!("notebook.livemd")
 # Extract only executable code as a single string
 code = NimbleLivebookMarkdownExtractor.extract_executable_code(content)
 IO.puts(code)
+```
+
+**For AI Coding Agents - Extract and Test:**
+
+```elixir
+# Extract executable code from a LiveBook
+code = File.read!("notebook.livemd")
+       |> NimbleLivebookMarkdownExtractor.extract_executable_code()
+
+# Test the extracted code
+File.write!("/tmp/test.exs", code)
+System.cmd("elixir", ["/tmp/test.exs"])
+|> case do
+  {_, 0} -> IO.puts("✅ LiveBook code is valid")
+  {error, _} -> IO.puts("❌ Error: #{error}")
+end
 ```
 
 ### Three Extraction Modes
@@ -176,6 +197,49 @@ The parser extracts:
 ```
 
 Notice that the example usage with `Pipeline.fetch_data("https://example.com/api/data")` is **not** extracted because it's marked as `force_markdown`.
+
+## Use Cases
+
+### LLM Coding Agents (Primary Use Case)
+
+When working with Large Language Model coding agents like **GitHub Copilot**, **Claude Code**, or **Cursor**, you often need to test code within LiveBook notebooks. This module provides a scriptable way for AI coding agents to extract and execute the actual Elixir source code from a LiveBook for testing purposes.
+
+**Example workflow with an LLM coding agent:**
+
+```elixir
+# AI agent can extract code from a LiveBook for testing
+livebook_content = File.read!("my_notebook.livemd")
+
+# Extract only the executable code
+code = NimbleLivebookMarkdownExtractor.extract_executable_code(livebook_content)
+
+# Create a temporary test file
+File.write!("/tmp/extracted_code.exs", code)
+
+# Run the extracted code for testing
+{output, exit_code} = System.cmd("elixir", ["/tmp/extracted_code.exs"])
+
+# AI agent can analyze the results
+if exit_code == 0 do
+  IO.puts("✅ LiveBook code executes successfully")
+else
+  IO.puts("❌ Error in LiveBook code:\n#{output}")
+end
+```
+
+This enables AI coding agents to:
+- **Validate LiveBooks** - Test that notebook code actually runs
+- **Debug iteratively** - Extract, run, analyze errors, and fix
+- **Automate testing** - Integrate LiveBook validation in CI/CD pipelines
+- **Generate reports** - Analyze code quality and dependencies from notebooks
+
+### Other Use Cases
+
+- **Code Analysis** - Extract code for dependency analysis, security scanning, or metrics
+- **Documentation** - Generate documentation from LiveBook examples while excluding non-executable samples
+- **Education** - Analyze student LiveBook submissions programmatically
+- **Migration** - Convert LiveBooks to other formats (`.ex`, `.exs`, or other notebook formats)
+- **CI/CD Integration** - Validate that LiveBook code cells are syntactically correct and executable
 
 ## Running the Demo
 

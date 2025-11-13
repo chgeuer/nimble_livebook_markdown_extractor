@@ -1,5 +1,67 @@
 # Quick Start Guide
 
+## For LLM Coding Agents
+
+### Extract and Test LiveBook Code
+
+```elixir
+# Primary use case: AI agents testing LiveBook code
+livebook_path = "notebook.livemd"
+content = File.read!(livebook_path)
+
+# Extract executable code
+code = NimbleLivebookMarkdownExtractor.extract_executable_code(content)
+
+# Write to temporary file and test
+test_file = "/tmp/livebook_test.exs"
+File.write!(test_file, code)
+
+# Execute and check results
+{output, exit_code} = System.cmd("elixir", [test_file])
+
+if exit_code == 0 do
+  IO.puts("✅ LiveBook code executes successfully")
+  IO.puts(output)
+else
+  IO.puts("❌ Execution failed:")
+  IO.puts(output)
+end
+
+# Cleanup
+File.rm(test_file)
+```
+
+### Validate LiveBook in CI/CD
+
+```elixir
+# Script for AI agents to validate LiveBooks in pipelines
+defmodule LivebookValidator do
+  def validate(path) do
+    path
+    |> File.read!()
+    |> NimbleLivebookMarkdownExtractor.extract_executable_code()
+    |> Code.string_to_quoted()
+    |> case do
+      {:ok, _ast} -> 
+        {:ok, "LiveBook #{path} has valid syntax"}
+      {:error, {line, error, token}} ->
+        {:error, "Syntax error at line #{line}: #{error} #{token}"}
+    end
+  end
+end
+
+# Validate all LiveBooks
+Path.wildcard("**/*.livemd")
+|> Enum.each(fn path ->
+  case LivebookValidator.validate(path) do
+    {:ok, msg} -> IO.puts("✅ #{msg}")
+    {:error, msg} -> IO.puts("❌ #{msg}")
+  end
+end)
+```
+
+## General Usage
+
 ## 1. Extract All Executable Code (String)
 
 ```elixir
